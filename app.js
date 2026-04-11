@@ -7,6 +7,7 @@ const controlsVisit = document.getElementById('controls-visit');
 const controlsNames = document.getElementById('controls-names');
 const controlsSuccess = document.getElementById('controls-success');
 const intruderScreen = document.getElementById('intruder-screen');
+const successInstruction = document.getElementById('success-instruction');
 
 // Utility to clear screen
 function clearScreen() {
@@ -117,37 +118,107 @@ async function handleName(name) {
     await typeText("PAYLOAD: 12345678", 20, 500);
     await typeText("\n*** REQUIRED ACTION ***", 20, 0);
     
+    const ua = navigator.userAgent.toLowerCase();
+    const isIOS = ua.includes("iphone") || ua.includes("ipad");
+
+    if (isIOS) {
+        successInstruction.innerHTML = `
+            <br>
+            *** APPLE DEVICE DETECTED ***<br>
+            1. Click above to download the network profile.<br>
+            2. Tap <strong>Allow</strong> on the popup.<br>
+            3. Open your phone's <strong>Settings</strong> app.<br>
+            4. Tap <strong>Profile Downloaded</strong> at the top.<br>
+            5. Tap <strong>Install</strong> to merge into the mainframe.
+        `;
+    } else {
+        successInstruction.innerHTML = `
+            <br>
+            *** MANUAL OVERRIDE REQUIRED ***<br>
+            1. Click above to copy the cipher key.<br>
+            2. Close your browser and open your device's <strong>Settings</strong>.<br>
+            3. Go to <strong>Wi-Fi</strong> and select the <strong>Not_My_House</strong> network.<br>
+            4. Paste the launch code into the password section.
+        `;
+    }
+
     controlsSuccess.classList.remove('hidden');
 }
 
-function executePayload() {
-    // 1. Copy to clipboard
-    const password = "12345678";
-    navigator.clipboard.writeText(password).then(() => {
-        // 2. Open Settings via Deep Link based on OS
-        const ua = navigator.userAgent.toLowerCase();
-        let settingsUrl = "";
-        
-        if (ua.includes("iphone") || ua.includes("ipad")) {
-            settingsUrl = "App-Prefs:root=WIFI"; // iOS Deep Link
-        } else if (ua.includes("android")) {
-            // Android doesn't have a universal 1-click web deep link for settings that works reliably in all browsers
-            // Intent links sometimes work, but often fail if not in an anchor tag with specific attributes. 
-            // We'll fall back to just instructing the user if the intent fails, but this intent sometimes works.
-            settingsUrl = "intent:#Intent;action=android.settings.WIFI_SETTINGS;end";
-        } else {
-            alert(`Key copied to clipboard: ${password}. Please paste it in your WiFi settings.`);
-            return;
-        }
+function downloadAppleProfile() {
+    const mobileConfig = `<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>PayloadContent</key>
+    <array>
+        <dict>
+            <key>AutoJoin</key>
+            <true/>
+            <key>EncryptionType</key>
+            <string>WPA</string>
+            <key>HIDDEN_NETWORK</key>
+            <false/>
+            <key>IsHotspot</key>
+            <false/>
+            <key>Password</key>
+            <string>12345678</string>
+            <key>PayloadDescription</key>
+            <string>Configures Wi-Fi settings</string>
+            <key>PayloadDisplayName</key>
+            <string>Wi-Fi</string>
+            <key>PayloadIdentifier</key>
+            <string>com.apple.wifi.managed.1</string>
+            <key>PayloadType</key>
+            <string>com.apple.wifi.managed</string>
+            <key>PayloadUUID</key>
+            <string>B1A2C3D4-E5F6-7A8B-8C9D-E1F2A3B4C5D6</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>SSID_STR</key>
+            <string>Not_My_House</string>
+        </dict>
+    </array>
+    <key>PayloadDisplayName</key>
+    <string>Not_My_House Wi-Fi Access</string>
+    <key>PayloadIdentifier</key>
+    <string>Not_My_House.Profile</string>
+    <key>PayloadRemovalDisallowed</key>
+    <false/>
+    <key>PayloadType</key>
+    <string>Configuration</string>
+    <key>PayloadUUID</key>
+    <string>A1B2C3D4-E5F6-7A8B-8C9D-E1F2A3B4C5D6</string>
+    <key>PayloadVersion</key>
+    <integer>1</integer>
+</dict>
+</plist>`;
+    
+    const blob = new Blob([mobileConfig], { type: 'application/x-apple-aspen-config' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'Not_My_House.mobileconfig';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
 
-        // Create an anchor and click it to bypass some stricter popup blockers
-        const a = document.createElement('a');
-        a.href = settingsUrl;
-        a.style.display = 'none';
-        document.body.appendChild(a);
-        a.click();
-        typeText("\n[LAUNCH CODE COPIED. OPENING WIFI SETTINGS...]\n[PASTE CODE IN NETWORK PASSWORD SECTION]", 20, 0);
-    }).catch(err => {
-        alert("Clipboard injection failed. Manual override required: Key is 12345678");
-    });
+function executePayload() {
+    const ua = navigator.userAgent.toLowerCase();
+    const isIOS = ua.includes("iphone") || ua.includes("ipad");
+
+    if (isIOS) {
+        downloadAppleProfile();
+        typeText("\n[CONFIGURATION FILE DOWNLOADED.]\n[ALLOW DOWNLOAD AND GO TO SETTINGS -> 'PROFILE DOWNLOADED' TO INSTALL.]", 20, 0);
+    } else {
+        // Fallback for Android
+        const password = "12345678";
+        navigator.clipboard.writeText(password).then(() => {
+            typeText("\n[LAUNCH CODE COPIED TO CLIPBOARD.]\n[MANUAL OVERRIDE REQUIRED: OPEN DEVICE WIFI SETTINGS]", 20, 0);
+        }).catch(err => {
+            alert("Clipboard injection failed. Manual override required: Key is 12345678");
+        });
+    }
 }
