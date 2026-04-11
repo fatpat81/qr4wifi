@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>W.O.P.R. Secure Access Node</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="crt-overlay"></div>
+    <div class="scanline"></div>
+    
+    <div id="terminal" class="terminal">
+        <div id="output"></div>
+        <div id="input-line" class="hidden">
+            <span class="prompt">&gt;</span> <span id="cursor">_</span>
+        </div>
+        
+        <!-- Interactive Controls -->
+        <div id="controls-visit" class="controls hidden">
+            <button class="hack-btn" onclick="handleVisit('YES')">[Y] YES</button>
+            <button class="hack-btn" onclick="handleVisit('NO')">[N] NO</button>
+        </div>
+
+        <div id="controls-names" class="controls hidden">
+            <button class="hack-btn" onclick="handleName('Patrick')">Patrick</button>
+            <button class="hack-btn" onclick="handleName('Kimberly')">Kimberly</button>
+            <button class="hack-btn" onclick="handleName('Alexis')">Alexis</button>
+            <button class="hack-btn" onclick="handleName('Sophie')">Sophie</button>
+            <button class="hack-btn" onclick="handleName('Ashlynn')">Ashlynn</button>
+            <button class="hack-btn" onclick="handleName('Delaney')">Delaney</button>
+        </div>
+
+        <div id="controls-success" class="controls hidden flex-col">
+            <button class="hack-btn pulse" onclick="executePayload()">[EXECUTE PAYLOAD]</button>
+            <div class="instruction">
+                <br>
+                1. Clicking above will copy the cipher key.<br>
+                2. Your system's network configuration will open.<br>
+                3. Paste the key to override the mainframe.<br>
+            </div>
+        </div>
+    </div>
+
+    <!-- Intruder screen -->
+    <div id="intruder-screen" class="hidden">
+        <div class="skull">
+            <pre>
+      ___
+    /     \ 
+   | () () |
+    \  ^  /
+     |||||
+     |||||
+            </pre>
+            <h1>INTRUDER DETECTED</h1>
+            <h2>INITIATING CONTAINMENT PROTOCOL</h2>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
