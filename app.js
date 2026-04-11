@@ -114,8 +114,6 @@ async function handleName(name) {
     clearScreen();
     
     await typeText("ACCESS GRANTED.\n", 50, 400);
-    await typeText("WIFI NODE: NOT_MY_HOUSE", 20, 200);
-    await typeText("PAYLOAD: 12345678", 20, 500);
     await typeText("\n*** REQUIRED ACTION ***", 20, 0);
     
     const ua = navigator.userAgent.toLowerCase();
@@ -146,63 +144,7 @@ async function handleName(name) {
 }
 
 function downloadAppleProfile() {
-    const mobileConfig = `<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>PayloadContent</key>
-    <array>
-        <dict>
-            <key>AutoJoin</key>
-            <true/>
-            <key>EncryptionType</key>
-            <string>WPA</string>
-            <key>HIDDEN_NETWORK</key>
-            <false/>
-            <key>IsHotspot</key>
-            <false/>
-            <key>Password</key>
-            <string>12345678</string>
-            <key>PayloadDescription</key>
-            <string>Configures Wi-Fi settings</string>
-            <key>PayloadDisplayName</key>
-            <string>Wi-Fi</string>
-            <key>PayloadIdentifier</key>
-            <string>com.apple.wifi.managed.1</string>
-            <key>PayloadType</key>
-            <string>com.apple.wifi.managed</string>
-            <key>PayloadUUID</key>
-            <string>B1A2C3D4-E5F6-7A8B-8C9D-E1F2A3B4C5D6</string>
-            <key>PayloadVersion</key>
-            <integer>1</integer>
-            <key>SSID_STR</key>
-            <string>Not_My_House</string>
-        </dict>
-    </array>
-    <key>PayloadDisplayName</key>
-    <string>Not_My_House Wi-Fi Access</string>
-    <key>PayloadIdentifier</key>
-    <string>Not_My_House.Profile</string>
-    <key>PayloadRemovalDisallowed</key>
-    <false/>
-    <key>PayloadType</key>
-    <string>Configuration</string>
-    <key>PayloadUUID</key>
-    <string>A1B2C3D4-E5F6-7A8B-8C9D-E1F2A3B4C5D6</string>
-    <key>PayloadVersion</key>
-    <integer>1</integer>
-</dict>
-</plist>`;
-    
-    const blob = new Blob([mobileConfig], { type: 'application/x-apple-aspen-config' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'Not_My_House.mobileconfig';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    window.location.href = 'wifi.mobileconfig';
 }
 
 function executePayload() {
