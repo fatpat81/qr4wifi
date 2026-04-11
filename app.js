@@ -146,8 +146,7 @@ function executePayload() {
         a.style.display = 'none';
         document.body.appendChild(a);
         a.click();
-        
-        typeText("\n[PAYLOAD INJECTED - AWAITING SYSTEM RESPONSE]", 20, 0);
+        typeText("\n[LAUNCH CODE COPIED. OPENING WIFI SETTINGS...]\n[PASTE CODE IN NETWORK PASSWORD SECTION]", 20, 0);
     }).catch(err => {
         alert("Clipboard injection failed. Manual override required: Key is 12345678");
     });
