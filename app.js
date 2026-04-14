@@ -136,7 +136,7 @@ async function handleName(name) {
             <br>
             *** MANUAL OVERRIDE REQUIRED ***<br>
             1. Click above to copy the cipher key.<br>
-            2. Close your browser and open your device's <strong>Settings</strong>.<br>
+            2. Click <strong>[OPEN SETTINGS]</strong> to launch network configs.<br>
             3. Go to <strong>Wi-Fi</strong> and select the <strong>Not_My_House</strong> network.<br>
             4. Paste the launch code into the password section.
         `;
