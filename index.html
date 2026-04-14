@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>P.F.M Secure Access Node</title>
+    <title>P.F.M. Secure Access Node</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -32,7 +32,8 @@
         </div>
 
         <div id="controls-success" class="controls hidden flex-col">
-            <button class="hack-btn pulse" onclick="executePayload()">[EXECUTE PAYLOAD]</button>
+            <button id="payload-btn" class="hack-btn pulse" onclick="executePayload()">[EXECUTE PAYLOAD]</button>
+            <a id="settings-link" class="hack-btn hidden" href="#" style="text-decoration: none; text-align: center;">[OPEN SETTINGS]</a>
             <div id="success-instruction" class="instruction">
                 <!-- Injected via JS based on OS -->
             </div>

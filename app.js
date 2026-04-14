@@ -8,6 +8,8 @@ const controlsNames = document.getElementById('controls-names');
 const controlsSuccess = document.getElementById('controls-success');
 const intruderScreen = document.getElementById('intruder-screen');
 const successInstruction = document.getElementById('success-instruction');
+const payloadBtn = document.getElementById('payload-btn');
+const settingsLink = document.getElementById('settings-link');
 
 // Utility to clear screen
 function clearScreen() {
@@ -33,7 +35,7 @@ async function typeText(text, delay = 20, pauseAfter = 300) {
 }
 
 async function bootSequence() {
-    await typeText("W.O.P.R. OS v1.2.4", 50);
+    await typeText("P.F.M. OS v1.2.4", 50);
     await typeText("CONNECTING TO 205 PATTERSON MILL RD MAINFRAME...", 30, 800);
     await typeText("ESTABLISHING SECURE HANDSHAKE... OK", 10, 500);
     await typeText("BYPASSING FIREWALL... OK", 10, 500);
@@ -151,14 +153,20 @@ function executePayload() {
     const ua = navigator.userAgent.toLowerCase();
     const isIOS = ua.includes("iphone") || ua.includes("ipad");
 
+    // Hide payload button, show settings link
+    payloadBtn.classList.add('hidden');
+    settingsLink.classList.remove('hidden');
+
     if (isIOS) {
+        settingsLink.href = "App-Prefs:root=General&path=ManagedConfigurationList"; // iOS Link to profile install or Wifi
         downloadAppleProfile();
-        typeText("\n[CONFIGURATION FILE DOWNLOADED.]\n[ALLOW DOWNLOAD AND GO TO SETTINGS -> 'PROFILE DOWNLOADED' TO INSTALL.]", 20, 0);
+        typeText("\n[CONFIGURATION FILE DOWNLOADED.]\n[ALLOW DOWNLOAD AND CLICK 'OPEN SETTINGS' BELOW.]", 20, 0);
     } else {
         // Fallback for Android
+        settingsLink.href = "intent:#Intent;action=android.settings.WIFI_SETTINGS;end";
         const password = "12345678";
         navigator.clipboard.writeText(password).then(() => {
-            typeText("\n[LAUNCH CODE COPIED TO CLIPBOARD.]\n[MANUAL OVERRIDE REQUIRED: OPEN DEVICE WIFI SETTINGS]", 20, 0);
+            typeText("\n[LAUNCH CODE COPIED TO CLIPBOARD.]\n[CLICK 'OPEN SETTINGS' BELOW.]", 20, 0);
         }).catch(err => {
             alert("Clipboard injection failed. Manual override required: Key is 12345678");
         });
